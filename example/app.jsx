@@ -50,7 +50,7 @@ const XSelect2 = class XSelect extends React.Component {
   }
   handleUpdate = (name, value) => {
     this.setState({value: value});
-    alert('Value Changed:' + value);
+    //alert('Value Changed:' + value);
   }
   render() {
     const options = [
@@ -68,8 +68,11 @@ const XSelect2 = class XSelect extends React.Component {
         value: 'USA'
       }
     ];
-    const defaultText = <span className="glyphicon glyphicon-pencil"/>;
-    return (<EditableSelect name='country' onUpdate={this.handleUpdate} value={this.state.value} options={options} defaultText={defaultText}/>);
+    //const defaultText = <span className="glyphicon glyphicon-pencil"/>;
+    return (<div>
+      <EditableSelect name='country1' key="x2s1rr" onUpdate={this.handleUpdate} value={this.state.value} options={options}/><br />
+      <EditableSelect name='country2' key="x2s2rr" onUpdate={this.handleUpdate} value={this.state.value} options={options}/>
+    </div>);
   }
 };
 

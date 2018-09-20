@@ -21,6 +21,11 @@ export default class EditableTextField extends React.Component {
     };
     this.setState = this.setState.bind(this);
   }
+  componentWillReceiveProps(nextProps) {
+    if( nextProps.value !== this.props.value ){
+      this.setState({value: nextProps.value});
+    }
+  }
   save = (event) => {
     event.preventDefault();
     this.props.onUpdate(this.props.name, this.refs.el.value);

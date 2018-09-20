@@ -18,7 +18,7 @@ export default class EditableSelect extends React.Component {
     this.setState = this.setState.bind(this);
 
     this.state = {
-      isEditing: false,
+      isEditing: this.props.isEditing ? true : false,
       value: this.props.value,
       defaultText: this.props.defaultText || 'not selected',
     };
@@ -26,12 +26,41 @@ export default class EditableSelect extends React.Component {
     this.state.options = this.convertOptions(this.props.options);
 
     const selected = this.state.options && this.state.options.find((opt) => {
-      if (opt.value === this.props.value) {
+      if (opt.value == this.props.value) {
         return opt;
       }
     });
     this.setLinkText(selected && selected.text);
 
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.options || nextProps.value) {
+      let changed = false, newState = this.state;
+      if (nextProps.options) {
+        newState.options = this.convertOptions(nextProps.options);
+        changed = true;
+      }
+      if( nextProps.value !== this.state.value ){
+        const selected = newState.options && newState.options.find((opt) => {
+          if (opt.value == nextProps.value) {
+            return opt;
+          }
+        });
+        newState.value = nextProps.value;
+        newState.text = selected && selected.text;
+        changed = true;
+      }
+      if (nextProps.isEditing) {
+        newState.isEditing = nextProps.isEditing;
+      } else {
+        newState.isEditing = false;
+      }
+
+      if (changed){
+        this.setState(newState);
+      }
+    }
   }
 
   save = (event) => {
@@ -40,6 +69,7 @@ export default class EditableSelect extends React.Component {
     const text = this.refs.el.options && this.refs.el.options[this.refs.el.selectedIndex] && this.refs.el.options[this.refs.el.selectedIndex].text;
     this.setState({
       isEditing: false,
+      value: this.refs.el.value
     });
     this.setLinkText(text);
   }

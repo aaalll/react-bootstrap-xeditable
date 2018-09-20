@@ -12,16 +12,33 @@ export default class EditableTextArea extends React.Component {
     cols: PropTypes.number,
     placeholder: PropTypes.string,
     onUpdate: PropTypes.func.isRequired,
-    defaultText: PropTypes.node
+    defaultText: PropTypes.node,
+    disabled: PropTypes.bool
   };
   constructor(props) {
     super(props);
     this.state = {
       isEditing: false,
       value: this.props.value,
+      disabled: this.props.disabled,
       defaultText: this.props.defaultText || 'Empty',
     };
     this.setState = this.setState.bind(this);
+    this.handleLinkClick = this.handleLinkClick.bind(this);
+  }
+  componentWillReceiveProps(nextProps) {
+    let changed = false, newState = this.state;
+    if( nextProps.value !== this.props.value ){
+      newState.value = nextProps.value;
+      changed = true;
+    }
+    if( nextProps.disabled !== this.props.disabled ){
+      newState.disabled = nextProps.disabled;
+      changed = true;
+    }
+    if (changed) {
+      this.setState(newState);
+    }
   }
   save = (event) => {
     event.preventDefault();
@@ -35,7 +52,9 @@ export default class EditableTextArea extends React.Component {
     this.refs.el.value = '';
   }
   handleLinkClick = () => {
-    this.setState({isEditing: true});
+    if (!this.state.disabled) {
+      this.setState({isEditing: true});
+    }
   }
   render() {
     if (this.state.isEditing) {
